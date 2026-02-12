@@ -1,4 +1,6 @@
 {
+  "chat_format": "video",
+  "clip_model_path": "/path/to/clip/model",
   "params": {
     "model": "llama-2-7b-chat",
     "rpc_servers": ["192.168.1.124:50052"],

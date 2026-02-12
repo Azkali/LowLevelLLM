@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from llama_supercharged.src.llm import Llm
+from llama_supercharged.src.llm import LLM
 
 def parser():
     parser = ArgumentParser()
@@ -9,5 +9,5 @@ def parser():
 
 if __name__ == "__main__":
     args = parser()
-    pt = Llm(json=args.json, cache_dir=args.cache_dir)
+    pt = LLM(json=args.json, cache_dir=args.cache_dir)
     pt()
