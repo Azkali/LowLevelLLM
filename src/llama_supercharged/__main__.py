@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from llama_supercharged.src.llm import LLM
+from .llm import LLM
 
 def parser():
     parser = ArgumentParser()
