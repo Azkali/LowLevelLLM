@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 # Parametrized model instance
-# json -> str: json path
+# json_file -> str: json path
 # cache_dir -> str: cache directory path
 class LLM:
     def __init__(self, json_file: str, cache_dir: str = "cache"):
