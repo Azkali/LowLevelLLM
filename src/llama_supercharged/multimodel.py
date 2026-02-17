@@ -1,10 +1,12 @@
 import yaml
-from llama_supercharged.main import main
+from llama_supercharged.modes.single_model import single_model
 
-class Generator:
+class MultiModel:
     def __init__(self, yaml_file: str, cache_dir: str = "cache"):
         self.yaml_file = yaml_file
         self.cache_dir = cache_dir
+        self.model_dir = Path(cache_dir) / "models"
+        self.model_dir.mkdir(parents=True, exist_ok=True)
         self.config = self.load_config()
 
     def __call__(self):
@@ -24,7 +26,7 @@ class Generator:
 
     def execute_step(self, step: str, model: str, json_file: str, depends_on: list = [], messages: list = []):
         print(f"Executing step {step} with model {model} and dependencies {depends_on}")
-        self.last_output = main(model=model, json_file=json_file, cache_dir=self.cache_dir, messages=messages)
+        self.last_output = single_model(model=model, json_file=json_file, cache_dir=self.cache_dir, messages=messages)
 
     def load_config(self):
         with open(self.yaml_file, 'r') as file:
