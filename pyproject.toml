@@ -3,7 +3,7 @@ name = "llama_supercharged"
 version = "0.1.0"
 dependencies = [
 	"llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git",
-	"PyYaml"
+	"PyYaml",
 ]
 requires-python = ">=3.11" # (very) possibly lower.
 authors = [
@@ -12,3 +12,15 @@ authors = [
 ]
 description = "Supercharged interface library for running (and stringing) LLMs."
 readme = "README.md"
+
+[project.scripts]
+dev = "llama_supercharged.__main__:run"
+
+[build-system]
+requires = ["uv_build>=0.10.3,<0.11.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+extra-build-variables = {
+	llama-cpp-python = { CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" }
+}
