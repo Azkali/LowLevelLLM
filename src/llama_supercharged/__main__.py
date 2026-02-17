@@ -1,13 +1,5 @@
-from argparse import ArgumentParser
-from .llm import LLM
-
-def parser():
-    parser = ArgumentParser()
-    parser.add_argument("-j", "--json_file", type=str, help="JSON file")
-    parser.add_argument("-c", "--cache_dir", type=str, default="cache", help="Cache directory")
-    return parser.parse_args()
+from llama_supercharged.main import main, parser
 
 if __name__ == "__main__":
     args = parser()
-    pt = LLM(json_file=args.json_file, cache_dir=args.cache_dir)
-    pt()
+    main(args.model, args.json_file, args.cache_dir)
