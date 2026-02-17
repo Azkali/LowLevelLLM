@@ -24,6 +24,7 @@ uninstall:
 spring-clean: uninstall
 	@echo "spring-cleaning the environment..."
 	@$(PIP) cache purge
-	@rm -r src/*.egg-info
+	@rm -rf src/*.egg-info
+	@find src/ -name "__pycache__" -exec rm -rf {} +
 
 .PHONY: install install-dev uninstall spring-clean
