@@ -1,0 +1,10 @@
+step_1:
+    model: "LlamaCPPMultiModal"
+    json_file: "step_1.json"
+step_2:
+    model: "LlamaLLM"
+    json_file: "step_2.json"
+step_3:
+    model: "LlamaLLM"
+    json_file: "step_3.json"
+    depends_on: ["step_1", "step_2"]
