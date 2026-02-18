@@ -13,7 +13,7 @@
   },
   "instruction": {
     "messages": [{"role": "user", "content": [
-	    {"type": "image", "path": "tdata/Duke3D.png"},
+	    {"type": "image", "path": "tdata/image/characters/lovely_mascot.png"},
 	    {"type": "text", "text": "Describe the image. What do you see? Be short. Do you know the name of the subject?"}
     ]}]
   }
