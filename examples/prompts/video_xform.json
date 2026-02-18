@@ -1,0 +1,20 @@
+{
+  "params": {
+    "model": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-VL-4B-Thinking",
+      "device_map": "cuda"
+    },
+    "processor": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-VL-4B-Thinking"
+    }
+  },
+  "prompt": {
+    "max_new_tokens": 4096
+  },
+  "instruction": {
+    "messages": [{"role": "user", "content": [
+	    {"type": "video", "path": "tdata/kjuggle2.mp4"},
+	    {"type": "text", "text": "Describe the video. What do you see? What is the man doing? Try not to use too many thinking tokens."}
+    ]}]
+  }
+}

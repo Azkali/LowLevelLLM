@@ -1,0 +1,17 @@
+{
+  "params": {
+    "model": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-0.6B",
+      "device_map": "auto"
+    },
+    "processor": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-0.6B"
+    }
+  },
+  "prompt": {
+    "max_new_tokens": 512
+  },
+  "instruction": {
+    "messages": [{"role": "user", "content": "Hi. Can you tell me a little about yourself?"}]
+  }
+}

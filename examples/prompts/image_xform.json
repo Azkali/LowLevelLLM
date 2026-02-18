@@ -1,0 +1,20 @@
+{
+  "params": {
+    "model": {
+      "pretrained_model_name_or_path": "google/gemma-3-4b-it",
+      "device_map": "auto"
+    },
+    "processor": {
+      "pretrained_model_name_or_path": "google/gemma-3-4b-it"
+    }
+  },
+  "prompt": {
+    "max_new_tokens": 128
+  },
+  "instruction": {
+    "messages": [{"role": "user", "content": [
+	    {"type": "image", "path": "tdata/Duke3D.png"},
+	    {"type": "text", "text": "Describe the image. What do you see? Be short. Do you know the name of the subject?"}
+    ]}]
+  }
+}

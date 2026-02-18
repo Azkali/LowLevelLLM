@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 from .llm import LLM
+from .backends.xformLLM import xformLLM
 
 def parser():
     parser = ArgumentParser()
@@ -9,5 +10,15 @@ def parser():
 
 if __name__ == "__main__":
     args = parser()
-    pt = LLM(json_file=args.json_file, cache_dir=args.cache_dir)
-    pt()
+
+    pt = xformLLM(json_file="examples/prompts/text_xform.json", cache_dir=args.cache_dir)
+    print(pt())
+    del pt
+
+    pt = xformLLM(json_file="examples/prompts/image_xform.json", cache_dir=args.cache_dir)
+    print(pt())
+    del pt
+
+    pt = xformLLM(json_file="examples/prompts/video_xform.json", cache_dir=args.cache_dir)
+    print(pt())
+    del pt
