@@ -9,7 +9,12 @@
     }
   },
   "prompt": {
-    "max_new_tokens": 128
+    "model": {
+      "max_new_tokens": 128
+    },
+    "processor": {
+      "add_generation_prompt": true
+    }
   },
   "data": {
     "messages": [{"role": "user", "content": [

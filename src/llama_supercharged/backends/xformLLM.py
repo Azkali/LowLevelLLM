@@ -4,6 +4,15 @@ from transformers import AutoModelForCausalLM, AutoModelForMultimodalLM, AutoPro
 from threading import Thread
 import torch
 
+# L1JSON/redJSON -> xformLLM inflation:
+#  params
+#   .model       -> model                     load parameters.
+#   .processor   -> processor/tokenizer       load parameters.
+#  prompt
+#   .model       -> model                     generation parameters.
+#   .processor   -> processor/tokenizer       data process parameters.
+#  data          -> model                     generation messages.
+
 class xformLLM(LLM):
     def __init__(self, json_file: str, cache_dir: str = "cache"):
         super().__init__(json_file, cache_dir)
@@ -26,16 +35,14 @@ class xformLLM(LLM):
         processed = self.processor.apply_chat_template(
             self.data.get("messages", []),
             tokenize=True,
-            add_generation_prompt=True,
             return_tensors="pt",
             return_dict=True,
-            fps=2,
         )
         processed = {k: v.to(self.model.device) for k,v in processed.items()}
 
         thread = Thread(
             target=self.model.generate,
-            kwargs={**processed, **self.prompt, "streamer": self.streamer},
+            kwargs={**processed, **self.prompt_model, "streamer": self.streamer},
         )
         thread.start()
 
@@ -79,6 +86,7 @@ class xformLLM(LLM):
         self.params_model = self.params.get("model", {})
         self.params_proce = self.params.get("processor", {})
         # PPD -> P2
-        # (no change needed.)
+        self.prompt_model = self.prompt.get("model", {})
+        self.prompt_proce = self.prompt.get("processor", {})
         # PPD -> D
         # (no processing required.)
