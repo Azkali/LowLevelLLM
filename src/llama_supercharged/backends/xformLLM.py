@@ -7,7 +7,7 @@ import torch
 class xformLLM(LLM):
     def __init__(self, json_file: str, cache_dir: str = "cache"):
         super().__init__(json_file, cache_dir)
-        self._set_params()
+        self._load_data()
 
         mtype = self._load_model()
         #print("compiling...")
@@ -24,7 +24,7 @@ class xformLLM(LLM):
 
     def callback(self):
         processed = self.processor.apply_chat_template(
-            self.instruction.get("messages", []),
+            self.data.get("messages", []),
             tokenize=True,
             add_generation_prompt=True,
             return_tensors="pt",
@@ -72,8 +72,13 @@ class xformLLM(LLM):
         torch.cuda.empty_cache()
         return "CAUSAL"
 
-    def _set_params(self):
+    def _load_data(self):
+        super()._load_data()
+
+        # PPD -> P1
         self.params_model = self.params.get("model", {})
-        self.params_quant = self.params.get("quant", {})
-        self.params_token = self.params.get("tokenizer", {})
         self.params_proce = self.params.get("processor", {})
+        # PPD -> P2
+        # (no change needed.)
+        # PPD -> D
+        # (no processing required.)

@@ -11,7 +11,7 @@
   "prompt": {
     "max_new_tokens": 512
   },
-  "instruction": {
+  "data": {
     "messages": [{"role": "user", "content": "Hi. Can you tell me a little about yourself?"}]
   }
 }
