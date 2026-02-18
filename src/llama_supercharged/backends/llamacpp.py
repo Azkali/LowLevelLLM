@@ -1,5 +1,6 @@
-from .llm import LLM
+from llama_supercharged.llm import LLM
 from llama_cpp import Llama, llama_chat_format as chat_formats
+from typing import override
 
 FORMATS = {
     name: obj
@@ -8,12 +9,13 @@ FORMATS = {
 }
 
 class LlamaLLM(LLM):
-    def __init__(self, json_file: str, cache_dir: str = "cache"):
+    def __init__(self, json_file: str, cache_dir: str = "cache", **kwargs):
         super().__init__(json_file, cache_dir)
         self.llm = Llama(**self._set_params())
 
-    def callback(self, response):
-        return self.llm(prompt=self.instruction, **self.prompt_args)
+    @override
+    def callback(self):
+        self.last_output = self.llm(prompt=self.instruction, **self.prompt, **self.additionals)
 
     def _handle_chat_completion(self):
         return self.llm.create_chat_completion(self.data["chat_completion"])
@@ -37,11 +39,12 @@ class LlamaCPPMultiModal(LlamaLLM):
 
 
 class AutoLlamaType(LlamaLLM):
+    @override
     def callback(self):
         if (self.data.get("capabilities") == "text"):
-            run = LlamaLLM(json_file, cache_dir)
+            run = LlamaLLM(self.json_file, self.cache_dir, **self.additionals)
         elif (self.data.get("capabilities") == "video"):
-            run = LlamaCPPMultiModal(json_file, cache_dir)
+            run = LlamaCPPMultiModal(self.json_file, self.cache_dir, **self.additionals)
         else:
             raise ValueError("Invalid chat format")
         return run.callback()
