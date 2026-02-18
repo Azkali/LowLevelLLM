@@ -5,10 +5,10 @@ dependencies = [
 	"llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git",
 	"PyYaml",
 	"transformers",
-        "torch",
-        "torchvision",
-        "torchcodec",
-        "accelerate",
+	"torch",
+	"torchvision",
+	"torchcodec",
+	"accelerate",
 ]
 requires-python = ">=3.11" # (very) possibly lower.
 authors = [
