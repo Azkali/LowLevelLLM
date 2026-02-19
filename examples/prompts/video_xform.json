@@ -14,7 +14,7 @@
     },
     "processor": {
       "add_generation_prompt": true,
-      "fps": 5
+      "fps": 3
     }
   },
   "data": {

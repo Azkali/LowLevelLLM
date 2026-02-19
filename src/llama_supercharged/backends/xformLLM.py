@@ -37,6 +37,7 @@ class xformLLM(LLM):
             tokenize=True,
             return_tensors="pt",
             return_dict=True,
+            **self.prompt_proce,
         )
         processed = {k: v.to(self.model.device) for k,v in processed.items()}
 
