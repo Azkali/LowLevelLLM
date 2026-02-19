@@ -8,7 +8,8 @@ RUN apt-get update && \
         curl \
         libvulkan-dev \
         glslc
-RUN pip install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
 
 # Install the package
 COPY . /app

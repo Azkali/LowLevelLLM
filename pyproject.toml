@@ -10,13 +10,17 @@ dependencies = [
 	"torchcodec",
 	"accelerate",
 ]
-requires-python = ">=3.11" # (very) possibly lower.
+requires-python = ">=3.11"
 authors = [
 	{ name = "Azkali", email = "a.ffcc7@gmail.com" },
 	{ name = "NV4", email = "cattobyte@kyararanbii.xyz" },
 ]
 description = "Supercharged interface library for running (and stringing) LLMs."
 readme = "README.md"
+
+[project.optional-dependencies]
+dev = ["pre-commit"]
+rocm = []
 
 [project.scripts]
 dev = "llama_supercharged.__main__:run"
@@ -27,5 +31,13 @@ build-backend = "uv_build"
 
 [tool.uv]
 extra-build-variables = {
-	llama-cpp-python = { CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" }
+    llama-cpp-python = { CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" }
 }
+
+[tool.uv.sources]
+torch = { index = "amd_rocm71", marker = "extra == 'rocm'" }
+torchvision = { index = "amd_rocm71", marker = "extra == 'rocm'" }
+
+[[tool.uv.index]]
+name = "amd_rocm71"
+url = "https://download.pytorch.org/whl/rocm7.1"
