@@ -1,8 +1,7 @@
 from ..llm import LLM
-#from transformers import AutoModelForCausalLM, AutoModelForVision2Seq, AutoTokenizer, AutoProcessor, AutoConfig
 from transformers import AutoModelForCausalLM, AutoModelForMultimodalLM, AutoProcessor, AutoConfig, TextIteratorStreamer
 from threading import Thread
-import torch
+from typing import override
 
 # L1JSON/redJSON -> xformLLM inflation:
 #  params
@@ -17,20 +16,12 @@ class xformLLM(LLM):
     def __init__(self, json_file: str, cache_dir: str = "cache"):
         super().__init__(json_file, cache_dir)
         self._load_data()
-
         mtype = self._load_model()
-        #print("compiling...")
-        #self.model.compile()
-        print(self.model.get_memory_footprint())
+
         self.processor = AutoProcessor.from_pretrained(**self.params_proce)
         self.tokenizer = self.processor.tokenizer if mtype != "CAUSAL" else self.processor._tokenizer
 
-        self.streamer = TextIteratorStreamer( # does this have to be here?
-            tokenizer=self.tokenizer,
-            skip_prompt=False,
-            skip_special_tokens=False,
-        )
-
+    @override
     def callback(self):
         processed = self.processor.apply_chat_template(
             self.data.get("messages", []),
@@ -41,6 +32,11 @@ class xformLLM(LLM):
         )
         processed = {k: v.to(self.model.device) for k,v in processed.items()}
 
+        self.streamer = TextIteratorStreamer(
+            tokenizer=self.tokenizer,
+            skip_prompt=False,
+            skip_special_tokens=False,
+        )
         thread = Thread(
             target=self.model.generate,
             kwargs={**processed, **self.prompt_model, "streamer": self.streamer},
@@ -57,6 +53,7 @@ class xformLLM(LLM):
     def _load_model(self):
         config = AutoConfig.from_pretrained(self.params_model.get("pretrained_model_name_or_path", {}))
 
+        # non-working quantization implementation. use as reference.
         """
         qargs = self.params_quant.get("config", {})
         match self.params_quant.get("type", {}):
@@ -70,14 +67,12 @@ class xformLLM(LLM):
         """
 
         if hasattr(config, "vision_config"):
-            print("MMODAL!")
+            #print("MMODAL!")
             self.model = AutoModelForMultimodalLM.from_pretrained(**self.params_model)#, **qconf)
-            torch.cuda.empty_cache()
             return "MMODAL"
 
-        print("CAUSAL!")
+        #print("CAUSAL!")
         self.model = AutoModelForCausalLM.from_pretrained(**self.params_model)#, **qconf)
-        torch.cuda.empty_cache()
         return "CAUSAL"
 
     def _load_data(self):
