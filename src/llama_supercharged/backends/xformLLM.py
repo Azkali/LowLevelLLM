@@ -18,7 +18,7 @@ class xformLLM(LLM):
         self._load_data()
         mtype = self._load_model()
 
-        self.processor = AutoProcessor.from_pretrained(**self.params_proce)
+        self.processor = AutoProcessor.from_pretrained(**self.params_processor)
         self.tokenizer = self.processor.tokenizer if mtype != "CAUSAL" else self.processor._tokenizer
 
     @override
@@ -28,7 +28,7 @@ class xformLLM(LLM):
             tokenize=True,
             return_tensors="pt",
             return_dict=True,
-            **self.prompt_proce,
+            **self.prompt_processor,
         )
         processed = {k: v.to(self.model.device) for k,v in processed.items()}
 
@@ -79,10 +79,10 @@ class xformLLM(LLM):
         super()._load_data()
 
         # PPD -> P1
-        self.params_model = self.params.get("model", {})
-        self.params_proce = self.params.get("processor", {})
+        self.params_model =     self.params.get("model", {})
+        self.params_processor = self.params.get("processor", {})
         # PPD -> P2
-        self.prompt_model = self.prompt.get("model", {})
-        self.prompt_proce = self.prompt.get("processor", {})
+        self.prompt_model =     self.prompt.get("model", {})
+        self.prompt_processor = self.prompt.get("processor", {})
         # PPD -> D
         # (no processing required.)
