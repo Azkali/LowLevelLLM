@@ -1,0 +1,26 @@
+{
+  "params": {
+    "model": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-VL-4B-Thinking",
+      "device_map": "auto"
+    },
+    "processor": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-VL-4B-Thinking"
+    }
+  },
+  "prompt": {
+    "model": {
+      "max_new_tokens": 4096
+    },
+    "processor": {
+      "add_generation_prompt": true,
+      "fps": 3
+    }
+  },
+  "data": {
+    "messages": [{"role": "user", "content": [
+	    {"type": "video", "path": "tdata/video/kjuggle2.mp4"},
+	    {"type": "text", "text": "Describe the video. What do you see? What is the man doing? Try not to use too many thinking tokens."}
+    ]}]
+  }
+}

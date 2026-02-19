@@ -5,13 +5,10 @@ from pathlib import Path
 # json_file -> str: json path
 # cache_dir -> str: cache directory path
 class LLM:
-    def __init__(self, json_file: str, cache_dir: str = "cache", **kwargs):
-        self.additionals = kwargs
-        self.json_file = json_file
+    def __init__(self, json_file: str, cache_dir: str = "cache"):
         self.cache_dir = cache_dir
         self.model_dir = Path(cache_dir) / "models"
-        self.model_dir.mkdir(parents=True, exist_ok=True)
-        self._load_data()
+        self.load_data(json_file)
 
     def __call__(self):
         self.callback()
@@ -19,15 +16,12 @@ class LLM:
     def callback(self):
         pass
 
+    def load_data(self, json_file: str):
+        with open(json_file, 'r', encoding="utf-8") as f:
+            self.l1json = json.load(f)
+
     def _load_data(self):
-        with open(self.json_file, 'r', encoding="utf-8") as f:
-            self.data = json.load(f)
-
-        self.fmt = self.data.get("format", "text")
-        self.params = self.data.get("params")
-        self.prompt = self.data.get("prompt")
-        self.instruction = self.data.get("instruction")
-        self.clip_path = self.data.get("clip_model_path", None)
-
-    def _set_params(self):
-        return {**self.params, **self.additionals}
+        # L1JSON/redJSON structure.
+        self.params = self.l1json.get("params") # PPD -> P1
+        self.prompt = self.l1json.get("prompt") # PPD -> P2
+        self.data = self.l1json.get("data")     # PPD -> D

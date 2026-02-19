@@ -1,0 +1,17 @@
+{
+  "params": {
+    "repo_id": "Qwen/Qwen3-4B-GGUF",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "n_gpu_layers": -1
+  },
+  "prompt": {
+    "temperature": 4.0,
+    "max_tokens": 100
+  },
+  "data": {
+    "messages": [
+	    {"role": "system", "content": "/nothink"},
+	    {"role": "user", "content": "Write me a story about a man that goes to the moon only to find that it is all cheese. Make it less than 50 words."}
+    ]
+  }
+}
