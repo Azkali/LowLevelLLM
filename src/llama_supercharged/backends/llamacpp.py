@@ -2,49 +2,53 @@ from llama_supercharged.llm import LLM
 from llama_cpp import Llama, llama_chat_format as chat_formats
 from typing import override
 
-FORMATS = {
-    name: obj
-    for name, obj in vars(chat_formats).items()
-    if isinstance(obj, type)
-}
+# L1JSON/redJSON -> llamaLLM inflation:
+# params         -> model                     load parameters.
+# prompt         -> model                     generation parameters.
+# data           -> model                     generation messages.
+
+##########################################################
+#つづ: break down generation into lower-level components.#
+#      also reconsider just switching bindings. ＿|￣|○  #
+#                                                        #
+#      replicate xform's mtype mechanism (see printing)  #
+##########################################################
 
 class LlamaLLM(LLM):
     def __init__(self, json_file: str, cache_dir: str = "cache", **kwargs):
         super().__init__(json_file, cache_dir)
-        self.llm = Llama(**self._set_params())
+        self._load_data()
+        self._load_model()
 
     @override
     def callback(self):
-        self.last_output = self.llm(prompt=self.instruction, **self.prompt, **self.additionals)
+        output = self.model.create_chat_completion(**self.data, **self.prompt, stream=True)
 
-    def _handle_chat_completion(self):
-        return self.llm.create_chat_completion(self.data["chat_completion"])
+        for token in output:
+            delta = token["choices"][0].get("delta", {})
+            content = delta.get("content", {})
+            print(content, end="", flush=True)
 
-    def download_model(self, **kwargs):
-        return Llama.from_pretrained(local_dir=str(self.model_dir), **kwargs)
+        return output # probably won't work.
+        # ^ didn't, but for other reasons (concatenates during print).
+        # v this doesn't expose as much data as it should, but it's fine for now.
+        #return output["choices"][0]["message"]["content"]
+        # ignore all above. line 24 was the issue.
 
+    def _load_model(self):
+        self.model = Llama.from_pretrained(**self.params, local_dir=self.cache_dir)
 
-class LlamaCPPMultiModal(LlamaLLM):
-    def _handle_chat_format(self):
-        if self.fmt is None or self.fmt not in FORMATS:
-            print("Missing or invalid format")
-            return None
-        if self.fmt != "audio" and not self.clip_path:
-            print("Missing clip model path")
-            return None
-        return FORMATS[self.fmt](clip_model_path=self.clip_path)
+    # should i not define this function?
+    # that would call the super one, right?
+    # but i think i'll leave it since it'll be used in the future.
+    # and i think i'll leave it because the comments are there.
+    # ^ i wrote a poem haha.
+    def _load_data(self):
+        super()._load_data()
 
-    def _set_params(self):
-        return {"chat_handler": self._handle_chat_format(), **self.params}
-
-
-class AutoLlamaType(LlamaLLM):
-    @override
-    def callback(self):
-        if (self.data.get("capabilities") == "text"):
-            run = LlamaLLM(self.json_file, self.cache_dir, **self.additionals)
-        elif (self.data.get("capabilities") == "video"):
-            run = LlamaCPPMultiModal(self.json_file, self.cache_dir, **self.additionals)
-        else:
-            raise ValueError("Invalid chat format")
-        return run.callback()
+        # PPD -> P1
+        # read 4 lines ahead.
+        # PPD -> P2
+        # read 2 lines ahead.
+        # PPD -> D
+        # (no actionable that is necessary.)
