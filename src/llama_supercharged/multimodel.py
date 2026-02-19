@@ -1,5 +1,5 @@
-import yaml
 from llama_supercharged.modes.single_model import single_model
+import yaml
 
 class MultiModel:
     def __init__(self, yaml_file: str, cache_dir: str = "cache"):

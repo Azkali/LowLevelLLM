@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from llama_supercharged.llm import LLM
-from llama_supercharged.backends.llamacpp import *
+from llama_supercharged.backends.llamaLLM import *
 from llama_supercharged.multimodel import MultiModel
 
 def parser():
