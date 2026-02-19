@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from llama_supercharged.backends.llamacpp import LlamaLLM
 from llama_supercharged.modes.single_model import single_model
 from llama_supercharged.modes.multi_model import multi_model
 
@@ -22,6 +23,15 @@ def main(model: str, json_file: str, yaml_file: str = "", cache_dir: str = "cach
 def run():
     args = parser()
     #main(args.model, args.json_file, args.yaml_file, args.cache_dir)
+
+    pt = LlamaLLM(json_file="examples/prompts/text_llama.json", cache_dir=args.cache_dir)
+    print(pt())
+    del pt
+
+    # non-functional: image doesn't get parsed.
+    #pt = LlamaLLM(json_file="examples/prompts/image_llama.json", cache_dir=args.cache_dir)
+    #print(pt())
+    #del pt
 
     pt = xformLLM(json_file="examples/prompts/text_xform.json", cache_dir=args.cache_dir)
     print(pt())
