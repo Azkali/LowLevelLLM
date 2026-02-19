@@ -1,4 +1,4 @@
-from ..llm import LLM
+from llama_supercharged.llm import LLM
 from transformers import AutoModelForCausalLM, AutoModelForMultimodalLM, AutoProcessor, AutoConfig, TextIteratorStreamer
 from threading import Thread
 from typing import override
