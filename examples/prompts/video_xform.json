@@ -19,7 +19,7 @@
   },
   "data": {
     "messages": [{"role": "user", "content": [
-	    {"type": "video", "path": "tdata/video/kjuggle2.mp4"},
+	    {"type": "video", "path": "tests/data/video/kjuggle2.mp4"},
 	    {"type": "text", "text": "Describe the video. What do you see? What is the man doing? Try not to use too many thinking tokens."}
     ]}]
   }
