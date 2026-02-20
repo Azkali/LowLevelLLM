@@ -1,0 +1,54 @@
+# L1JSON/redJSON structure (`xformLLM`-based/standard).
+
+1. L1JSON is composed of three sections:
+- params:	parameters for set-up procedure.
+- prompt:	parameters for data parsing.
+- data:		actual data to be parsed.
+
+2. Each section is ordered by how static they are:
+- params:	used to load models.    requires full reinitialization.
+- prompt:	used to parse data.     requires partial reinitialization to modify.
+- data:		data used.              no reinitialization required.
+
+The following is an example of the standard:
+```
+{
+  "params": {
+    "model": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-VL-4B-Thinking",
+      "device_map": "auto"
+    },
+    "processor": {
+      "pretrained_model_name_or_path": "Qwen/Qwen3-VL-4B-Thinking"
+    }
+  },
+  "prompt": {
+    "model": {
+      "max_new_tokens": 4096
+    },
+    "processor": {
+      "add_generation_prompt": true,
+      "fps": 3
+    }
+  },
+  "data": {
+    "messages": [{"role": "user", "content": [
+	    {"type": "video", "path": "tdata/video/kjuggle2.mp4"},
+	    {"type": "text", "text": "Describe the video. What do you see? What is the man doing? Try not to use too many thinking tokens."}
+    ]}]
+  }
+}
+```
+### IMPORTANT:
+In order to select the right processor, an L1JSON must have its processor prompt set with explicit format parameters.
+This can be seen in the example above with the addition of the "fps" key. Not using it would load the normal processor instead of the video one.
+
+3. L1JSON is not static.
+A given L1JSON structure can have many different keys *within the required base ones*. Which ones are used depends on the choice of model.
+If controlling an `xformLLM`-based model, parameters will fit nicely within the structure (as seen in the example). This is due to the nature of `xform`.
+For other back ends, such as `llamaLLM`, a given L1JSON structure is likely to look more or less barebones depending on how well the structure fits.
+**Regardless**, L1JSON exposes all the tools required to control a model.
+
+4. Colour-coding.
+In diagrams, L1JSON takes on the red colour (redJSON).
+No exceptions.
