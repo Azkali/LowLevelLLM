@@ -27,8 +27,9 @@ metal = [
     "torchvision",
 ]
 vulkan = [
-    "torch; sys_platform == 'linux'",
-    "torchvision; sys_platform == 'linux'",
+    "torch==2.10.0+rocm7.1",
+    "torchvision",
+    "triton_rocm==3.6.0",
 ]
 
 [project.scripts]
@@ -60,6 +61,9 @@ torchvision = [
     { index = "amd_rocm71", extra = "vulkan" },
     { index = "pypi",      extra = "metal" },
     { index = "pypi",       extra = "cpu"  },
+]
+triton_rocm = [
+    { index = "amd_rocm71", extra = "vulkan" }
 ]
 
 [[tool.uv.index]]
