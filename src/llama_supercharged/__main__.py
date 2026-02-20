@@ -20,7 +20,7 @@ def main(model: str, json_file: str = "", yaml_file: str = "", messages: list = 
         print(f"Loading JSON file... {json_file}")
         single_model(model, json_file, messages)
     else:
-        exit("Please provide either a JSON file or a YAML file")
+        exit("Please provide either a JSON file AND a valid model name or a YAML file")
 
 def run():
     args = parser()
