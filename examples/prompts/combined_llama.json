@@ -1,0 +1,17 @@
+{
+  "params": {
+    "repo_id": "Qwen/Qwen3-4B-GGUF",
+    "filename": "Qwen3-4B-Q4_K_M.gguf",
+    "n_gpu_layers": -1
+  },
+  "prompt": {
+    "temperature": 4.0,
+    "max_tokens": 100
+  },
+  "data": {
+    "messages": [
+	    {"role": "system", "content": "/nothink"},
+	    {"role": "user", "content": "I passed to you, in order the output from two other models, and I want you to explain and possibly correct any errors. Please provide a detailed explanation for each correction and suggest alternative solutions if applicable."}
+    ]
+  }
+}
