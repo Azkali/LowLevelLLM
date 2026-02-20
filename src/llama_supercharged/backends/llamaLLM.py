@@ -1,5 +1,4 @@
 from llama_supercharged.llm import LLM
-from llama_cpp import Llama
 from typing import override
 
 # L1JSON/redJSON -> llamaLLM inflation:
@@ -11,22 +10,9 @@ from typing import override
 #TODO: switch "back back end" to something else.#
 #################################################
 
-class LlamaLLM(LLM):
-    def __init__(self, json_file: str, **kwargs):
-        super().__init__(json_file)
-        self._load_data()
-        self._load_model()
-
+class llamaLLM(LLM):
     @override
     def callback(self):
-        output = self.model.create_chat_completion(**self.data, **self.prompt, stream=True)
-
-        for token in output:
-            delta = token["choices"][0].get("delta", {})
-            content = delta.get("content", {})
-            print(content, end="", flush=True)
-
-        return output
-
-    def _load_model(self):
-        self.model = Llama.from_pretrained(**self.params, local_dir=self.cache_dir)
+        sendback = "llamaLLM back end does not currently have a \"back back end\"."
+        print(sendback)
+        return sendback

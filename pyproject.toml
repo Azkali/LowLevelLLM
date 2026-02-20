@@ -2,7 +2,6 @@
 name = "llama_supercharged"
 version = "0.1.0"
 dependencies = [
-    "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git",
     "PyYaml",
     "transformers",
     "torchcodec",
