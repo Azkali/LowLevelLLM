@@ -7,7 +7,9 @@ RUN apt-get update && \
         python3-pip \
         curl \
         libvulkan-dev \
-        glslc
+        glslc \
+        make
+
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
@@ -16,4 +18,6 @@ COPY . /app
 WORKDIR /app
 
 # Run the development server
-ENTRYPOINT ["bash", "entrypoint.sh"]
+ENTRYPOINT ["make"]
+
+CMD ["rocm"]
