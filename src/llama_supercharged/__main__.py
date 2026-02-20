@@ -1,5 +1,5 @@
 from llama_supercharged.llm import LLM
-from llama_supercharged.backends.llamaLLM import LlamaLLM
+from llama_supercharged.backends.llamaLLM import llamaLLM
 from llama_supercharged.backends.xformLLM import xformLLM
 from llama_supercharged.modes.single_model import single_model
 from llama_supercharged.modes.multi_model import multi_model
