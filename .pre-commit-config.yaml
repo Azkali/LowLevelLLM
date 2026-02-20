@@ -27,15 +27,18 @@ repos:
 
             if [[ $amd = "true" ]]; then
               docker build -f Dockerfile.rocm -t uv-dev . && docker run --rm --privileged uv-dev
+            else
+              echo "Running Vulkan container"
+              make vulkan
             fi
 
           elif [[ $(uname -s) = "Darwin" ]]; then
             echo "Running on macOS — running uv locally"
-            uv run metal
+            make metal
             exit 0
           else
             echo "Running on CPU — running uv locally"
-            uv run cpu
+            make cpu
             exit 0
           fi
           '

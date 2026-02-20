@@ -1,19 +1,21 @@
-.PHONY: rocm metal cpu
+.PHONY: vulkan metal cpu setup
 
-rocm:
-	uv python install 3.13
-	uv venv --python 3.13
-	CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" uv sync --extra rocm
-	uv run rocm
+PYTHON_VERSION := 3.13
 
-metal:
-	uv python install 3.13
-	uv venv --python 3.13
-	CMAKE_ARGS="-DGGML_METAL=ON -DGGML_RPC=ON" uv sync --extra metal
-	uv run metal
+setup:
+	uv python install $(PYTHON_VERSION)
+	uv venv --python $(PYTHON_VERSION)
 
-cpu:
-	uv python install 3.13
-	uv venv --python 3.13
-	CMAKE_ARGS="-DGGML_RPC=ON" uv sync --extra cpu
-	uv run cpu
+define run_backend
+	CMAKE_ARGS="$(1)" uv sync --extra $(2)
+	uv run $(2)
+endef
+
+vulkan: setup
+	$(call run_backend,-DGGML_VULKAN=ON -DGGML_RPC=ON,vulkan)
+
+metal: setup
+	$(call run_backend,-DGGML_METAL=ON -DGGML_RPC=ON,metal)
+
+cpu: setup
+	$(call run_backend,-DGGML_RPC=ON,cpu)

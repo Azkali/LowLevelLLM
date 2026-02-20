@@ -26,7 +26,7 @@ metal = [
     "torch",
     "torchvision",
 ]
-rocm = [
+vulkan = [
     "torch; sys_platform == 'linux'",
     "torchvision; sys_platform == 'linux'",
 ]
@@ -35,7 +35,7 @@ rocm = [
 dev = "llama_supercharged.__main__:run"
 cpu = "llama_supercharged.__main__:run"
 metal = "llama_supercharged.__main__:run"
-rocm = "llama_supercharged.__main__:run"
+vulkan = "llama_supercharged.__main__:run"
 
 [build-system]
 requires = ["uv_build>=0.10.3,<0.11.0"]
@@ -46,18 +46,18 @@ conflicts = [
     [
         { extra = "cpu" },
         { extra = "metal" },
-        { extra = "rocm" },
+        { extra = "vulkan" },
     ],
 ]
 
 [tool.uv.sources]
 torch = [
-    { index = "amd_rocm71", extra = "rocm" },
+    { index = "amd_rocm71", extra = "vulkan" },
     { index = "pypi",      extra = "metal" },
     { index = "pypi",       extra = "cpu"  },
 ]
 torchvision = [
-    { index = "amd_rocm71", extra = "rocm" },
+    { index = "amd_rocm71", extra = "vulkan" },
     { index = "pypi",      extra = "metal" },
     { index = "pypi",       extra = "cpu"  },
 ]

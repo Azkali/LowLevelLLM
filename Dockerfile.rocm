@@ -20,4 +20,4 @@ WORKDIR /app
 # Run the development server
 ENTRYPOINT ["make"]
 
-CMD ["rocm"]
+CMD ["vulkan"]
