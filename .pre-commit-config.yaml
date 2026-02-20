@@ -10,25 +10,33 @@ repos:
             exit 0
           fi
 
-          has_amd_gpu=0;
-          for d in /sys/bus/pci/devices/*; do
-            if [[ "$(cat $d/vendor 2>/dev/null)" = "0x1002" ]]; then
-              class=$(cat $d/class 2>/dev/null)
-              case "$class" in
-                0x0300*|0x0302*)
-                  has_amd_gpu=1
-                  break
-                ;;
-              esac
-            fi
-          done
+          if [[ $(uname -s) = "Linux" ]]; then
+            amd=false;
+            for d in /sys/bus/pci/devices/*; do
+              if [[ "$(cat $d/vendor 2>/dev/null)" = "0x1002" ]]; then
+                class=$(cat $d/class 2>/dev/null)
+                case "$class" in
+                  0x0300*|0x0302*)
+                    echo "AMD GPU detected — running ROCm container"
+                    amd=true;
+                    break
+                  ;;
+                esac
+              fi
+            done
 
-          if [[ "$has_amd_gpu" -eq 1 ]]; then
-            echo "AMD GPU detected — running ROCm container"
-            docker build -f Dockerfile.rocm -t uv-dev . && docker run --rm --privileged uv-dev
+            if [[ $amd = "true" ]]; then
+              docker build -f Dockerfile.rocm -t uv-dev . && docker run --rm --privileged uv-dev
+            fi
+
+          elif [[ $(uname -s) = "Darwin" ]]; then
+            echo "Running on macOS — running uv locally"
+            uv run metal
+            exit 0
           else
-            echo "No AMD GPU detected — running uv locally"
+            echo "Running on CPU — running uv locally"
             uv run cpu
+            exit 0
           fi
           '
         language: system
