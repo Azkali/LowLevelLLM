@@ -12,8 +12,8 @@ from typing import override
 #################################################
 
 class LlamaLLM(LLM):
-    def __init__(self, json_file: str, cache_dir: str = "cache", **kwargs):
-        super().__init__(json_file, cache_dir)
+    def __init__(self, json_file: str, **kwargs):
+        super().__init__(json_file)
         self._load_data()
         self._load_model()
 

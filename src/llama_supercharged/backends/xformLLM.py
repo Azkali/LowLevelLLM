@@ -13,8 +13,8 @@ from typing import override
 #  data          -> model                     generation messages.
 
 class xformLLM(LLM):
-    def __init__(self, json_file: str, cache_dir: str = "cache"):
-        super().__init__(json_file, cache_dir)
+    def __init__(self, json_file: str):
+        super().__init__(json_file)
         self._load_data()
         mtype = self._load_model()
 
@@ -67,11 +67,9 @@ class xformLLM(LLM):
         """
 
         if hasattr(config, "vision_config"):
-            #print("MMODAL!")
             self.model = AutoModelForMultimodalLM.from_pretrained(**self.params_model)#, **qconf)
             return "MMODAL"
 
-        #print("CAUSAL!")
         self.model = AutoModelForCausalLM.from_pretrained(**self.params_model)#, **qconf)
         return "CAUSAL"
 
