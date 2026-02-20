@@ -1,0 +1,38 @@
+repos:
+  - repo: local
+    hooks:
+      - id: run
+        name: Run ROCm or Vulkan
+        entry: >
+          bash -c '
+          if [ $SKIP_PRECOMMIT = "true" ]; then
+            echo "Skipping pre-commit hook"
+            exit 0
+          fi
+
+          has_amd_gpu=0;
+          for d in /sys/bus/pci/devices/*; do
+            if [ "$(cat $d/vendor 2>/dev/null)" = "0x1002" ]; then
+              class=$(cat $d/class 2>/dev/null)
+              case "$class" in
+                0x0300*|0x0302*)
+                  has_amd_gpu=1
+                  break
+                ;;
+              esac
+            fi
+          done
+
+          if [ "$has_amd_gpu" -eq 1 ]; then
+            echo "AMD GPU detected — running ROCm container"
+            docker build -f Dockerfile.rocm -t uv-dev . &&
+            docker run --rm --privileged uv-dev
+          else
+            echo "No AMD GPU detected — running uv locally"
+            uv run dev
+          fi
+          '
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
