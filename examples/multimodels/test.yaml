@@ -1,10 +1,10 @@
 step_1:
-    model: "LlamaCPPMultiModal"
-    json_file: "step_1.json"
+    model: "xformLLM"
+    json_file: "examples/prompts/video_xform.json"
 step_2:
-    model: "LlamaLLM"
-    json_file: "step_2.json"
+    model: "xformLLM"
+    json_file: "examples/prompts/text_xform.json"
 step_3:
     model: "LlamaLLM"
-    json_file: "step_3.json"
+    json_file: "examples/prompts/combined_llama.json"
     depends_on: ["step_1", "step_2"]
