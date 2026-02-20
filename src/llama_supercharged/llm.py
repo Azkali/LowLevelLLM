@@ -3,11 +3,8 @@ from pathlib import Path
 
 # Parametrized model instance
 # json_file -> str: json path
-# cache_dir -> str: cache directory path
 class LLM:
-    def __init__(self, json_file: str, cache_dir: str = "cache"):
-        self.cache_dir = cache_dir
-        self.model_dir = Path(cache_dir) / "models"
+    def __init__(self, json_file: str):
         self.load_data(json_file)
 
     def __call__(self):
