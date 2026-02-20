@@ -2,25 +2,30 @@
 name = "llama_supercharged"
 version = "0.1.0"
 dependencies = [
-	"llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git",
-	"PyYaml",
-	"transformers",
-	"torch",
-	"torchvision",
-	"torchcodec",
-	"accelerate",
+    "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git",
+    "PyYaml",
+    "transformers",
+    "torchcodec",
+    "accelerate",
 ]
 requires-python = ">=3.11"
 authors = [
-	{ name = "Azkali", email = "a.ffcc7@gmail.com" },
-	{ name = "NV4", email = "cattobyte@kyararanbii.xyz" },
+    { name = "Azkali", email = "a.ffcc7@gmail.com" },
+    { name = "NV4", email = "cattobyte@kyararanbii.xyz" },
 ]
 description = "Supercharged interface library for running (and stringing) LLMs."
 readme = "README.md"
 
 [project.optional-dependencies]
 dev = ["pre-commit"]
-rocm = []
+cpu = [
+    "torch",
+    "torchvision",
+]
+rocm = [
+    "torch; sys_platform == 'linux'",
+    "torchvision; sys_platform == 'linux'",
+]
 
 [project.scripts]
 dev = "llama_supercharged.__main__:run"
@@ -30,14 +35,29 @@ requires = ["uv_build>=0.10.3,<0.11.0"]
 build-backend = "uv_build"
 
 [tool.uv]
-extra-build-variables = {
-    llama-cpp-python = { CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" }
-}
+conflicts = [
+    [
+        { extra = "cpu" },
+        { extra = "rocm" },
+    ],
+]
 
 [tool.uv.sources]
-torch = { index = "amd_rocm71", marker = "extra == 'rocm'" }
-torchvision = { index = "amd_rocm71", marker = "extra == 'rocm'" }
+torch = [
+    { index = "amd_rocm71", extra = "rocm" },
+    { index = "pypi",       extra = "cpu"  },
+]
+torchvision = [
+    { index = "amd_rocm71", extra = "rocm" },
+    { index = "pypi",       extra = "cpu"  },
+]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
 
 [[tool.uv.index]]
 name = "amd_rocm71"
 url = "https://download.pytorch.org/whl/rocm7.1"
+explicit = true
