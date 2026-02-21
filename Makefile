@@ -7,15 +7,15 @@ setup:
 	uv venv --python $(PYTHON_VERSION)
 
 define run_backend
-	CMAKE_ARGS="$(1)" uv sync --extra $(2)
-	uv run $(2)
+	CMAKE_ARGS="$(1)" uv sync
+	uv run dev
 endef
 
 vulkan: setup
-	$(call run_backend,-DGGML_VULKAN=ON -DGGML_RPC=ON,vulkan)
+	$(call run_backend,-DGGML_VULKAN=ON -DGGML_RPC=ON)
 
 metal: setup
-	$(call run_backend,-DGGML_METAL=ON -DGGML_RPC=ON,metal)
+	$(call run_backend,-DGGML_METAL=ON -DGGML_RPC=ON)
 
 cpu: setup
-	$(call run_backend,-DGGML_RPC=ON,cpu)
+	$(call run_backend,-DGGML_RPC=ON)
