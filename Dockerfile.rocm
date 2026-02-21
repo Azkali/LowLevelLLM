@@ -13,11 +13,11 @@ RUN apt-get update && \
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# Install the package
 COPY . /app
 WORKDIR /app
 
-# Run the development server
-ENTRYPOINT ["make"]
+ENV UV_SYSTEM_PYTHON=1
+ENV UV_BREAK_SYSTEM_PACKAGES=1
 
-CMD ["vulkan"]
+RUN CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" pip install -e ".[rocm]"
+ENTRYPOINT ["python3", "-m", "llama_supercharged"]
