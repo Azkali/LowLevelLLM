@@ -1,3 +1,4 @@
+import logging
 from llama_supercharged.llm import LLM
 from transformers import AutoModelForCausalLM, AutoModelForMultimodalLM, AutoProcessor, AutoConfig, TextIteratorStreamer
 from threading import Thread
@@ -12,13 +13,16 @@ from typing import override
 #   .processor   -> processor/tokenizer       data process parameters.
 #  data          -> model                     generation messages.
 
+logger = logging.getLogger("lib.xformLLM")
+
 class xformLLM(LLM):
     def __init__(self, json_file: str):
+        logger.info("initializing instance...")
         super().__init__(json_file)
-        self._load_data()
-        mtype = self._load_model()
+        self._load_data()                                                           ; logger.debug("parsed L1JSON succesfully.")
+        mtype = self._load_model()                                                  ; logger.debug(f"loaded model ({mtype} type).")
 
-        self.processor = AutoProcessor.from_pretrained(**self.params_processor)
+        self.processor = AutoProcessor.from_pretrained(**self.params_processor)     ; logger.debug("set up processor.")
         self.tokenizer = self.processor.tokenizer if mtype != "CAUSAL" else self.processor._tokenizer
 
     @override
@@ -67,6 +71,7 @@ class xformLLM(LLM):
         """
 
         if hasattr(config, "vision_config"):
+            logger.debug("model has vision_config attribute.")
             self.model = AutoModelForMultimodalLM.from_pretrained(**self.params_model)#, **qconf)
             return "MMODAL"
 
