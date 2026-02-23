@@ -1,9 +1,11 @@
-from llama_supercharged.llm import LLM
-from llama_supercharged.backends.llamaLLM import llamaLLM
-from llama_supercharged.backends.xformLLM import xformLLM
-from llama_supercharged.modes.single_model import single_model
-from llama_supercharged.modes.multi_model import multi_model
 from argparse import ArgumentParser
+
+from supercharger.backends.llamaLLM import llamaLLM
+from supercharger.backends.xformLLM import xformLLM
+from supercharger.llm import LLM
+from supercharger.modes.multi_model import multi_model
+from supercharger.modes.single_model import single_model
+
 
 def parser():
     parser = ArgumentParser()
@@ -11,6 +13,7 @@ def parser():
     parser.add_argument("-y", "--yaml_file", type=str, help="YAML file")
     parser.add_argument("-j", "--json_file", type=str, help="JSON file")
     return parser.parse_args()
+
 
 def main(model: str, json_file: str = "", yaml_file: str = "", messages: list = []):
     if yaml_file:
@@ -22,9 +25,11 @@ def main(model: str, json_file: str = "", yaml_file: str = "", messages: list = 
     else:
         exit("Please provide either a JSON file AND a valid model name or a YAML file")
 
+
 def run():
     args = parser()
     main(args.model, args.json_file, args.yaml_file)
+
 
 if __name__ == "__main__":
     run()

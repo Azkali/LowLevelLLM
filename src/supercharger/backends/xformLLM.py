@@ -1,7 +1,14 @@
-from llama_supercharged.llm import LLM
-from transformers import AutoModelForCausalLM, AutoModelForMultimodalLM, AutoProcessor, AutoConfig, TextIteratorStreamer
 from threading import Thread
 from typing import override
+
+from supercharger.llm import LLM
+from transformers import (
+    AutoConfig,
+    AutoModelForCausalLM,
+    AutoModelForMultimodalLM,
+    AutoProcessor,
+    TextIteratorStreamer,
+)
 
 # L1JSON/redJSON -> xformLLM inflation:
 #  params
@@ -12,6 +19,7 @@ from typing import override
 #   .processor   -> processor/tokenizer       data process parameters.
 #  data          -> model                     generation messages.
 
+
 class xformLLM(LLM):
     def __init__(self, json_file: str):
         super().__init__(json_file)
@@ -19,7 +27,9 @@ class xformLLM(LLM):
         mtype = self._load_model()
 
         self.processor = AutoProcessor.from_pretrained(**self.params_processor)
-        self.tokenizer = self.processor.tokenizer if mtype != "CAUSAL" else self.processor._tokenizer
+        self.tokenizer = (
+            self.processor.tokenizer if mtype != "CAUSAL" else self.processor._tokenizer
+        )
 
     @override
     def callback(self):
@@ -30,7 +40,7 @@ class xformLLM(LLM):
             return_dict=True,
             **self.prompt_processor,
         )
-        processed = {k: v.to(self.model.device) for k,v in processed.items()}
+        processed = {k: v.to(self.model.device) for k, v in processed.items()}
 
         self.streamer = TextIteratorStreamer(
             tokenizer=self.tokenizer,
@@ -51,7 +61,9 @@ class xformLLM(LLM):
         return output
 
     def _load_model(self):
-        config = AutoConfig.from_pretrained(self.params_model.get("pretrained_model_name_or_path", {}))
+        config = AutoConfig.from_pretrained(
+            self.params_model.get("pretrained_model_name_or_path", {})
+        )
 
         # non-working quantization implementation. use as reference.
         """
@@ -67,20 +79,24 @@ class xformLLM(LLM):
         """
 
         if hasattr(config, "vision_config"):
-            self.model = AutoModelForMultimodalLM.from_pretrained(**self.params_model)#, **qconf)
+            self.model = AutoModelForMultimodalLM.from_pretrained(
+                **self.params_model
+            )  # , **qconf)
             return "MMODAL"
 
-        self.model = AutoModelForCausalLM.from_pretrained(**self.params_model)#, **qconf)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            **self.params_model
+        )  # , **qconf)
         return "CAUSAL"
 
     def _load_data(self):
         super()._load_data()
 
         # PPD -> P1
-        self.params_model =     self.params.get("model", {})
+        self.params_model = self.params.get("model", {})
         self.params_processor = self.params.get("processor", {})
         # PPD -> P2
-        self.prompt_model =     self.prompt.get("model", {})
+        self.prompt_model = self.prompt.get("model", {})
         self.prompt_processor = self.prompt.get("processor", {})
         # PPD -> D
         # (no processing required.)

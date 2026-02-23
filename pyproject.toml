@@ -1,5 +1,5 @@
 [project]
-name = "llama_supercharged"
+name = "supercharger"
 version = "0.1.0"
 dependencies = [
     "PyYaml",
@@ -21,7 +21,7 @@ readme = "README.md"
 dev = ["pre-commit"]
 
 [project.scripts]
-dev = "llama_supercharged.__main__:run"
+dev = "supercharger.__main__:run"
 
 [build-system]
 requires = ["uv_build>=0.10.3,<0.11.0"]

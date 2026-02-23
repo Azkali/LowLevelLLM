@@ -1,11 +1,15 @@
-from llama_supercharged.backends import *
 import inspect
+
+from supercharger.backends import *
+
 
 def single_model(model: str, json_file: str, messages: list = []):
     backend_class = globals().get(model)
 
     if backend_class is None:
-        raise ValueError(f"Backend class '{model}' not found. Available: {', '.join([k for k in globals() if not k.startswith('__')])}")
+        raise ValueError(
+            f"Backend class '{model}' not found. Available: {', '.join([k for k in globals() if not k.startswith('__')])}"
+        )
 
     # If a module was imported instead of the class, extract the class from it
     if not inspect.isclass(backend_class):
