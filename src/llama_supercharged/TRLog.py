@@ -113,9 +113,10 @@ class TreeRoots(logging.Formatter):
         # to those reading this, please trust that this is more efficient.
         return f"[{PREFIX}] " + f"\n[{PREFIX}] ".join(output)
 
-def setup(level = logging.DEBUG, **kwargs):
+def setup(level = logging.DEBUG, use_TreeRoots = True, **kwargs):
     handler = logging.StreamHandler()
-    handler.setFormatter(TreeRoots(**kwargs))
+    formatter = TreeRoots(**kwargs) if use_TreeRoots else logging.Formatter()
+    handler.setFormatter(formatter)
 
     variable = logging.getLogger("lib")
     variable.setLevel(level)
