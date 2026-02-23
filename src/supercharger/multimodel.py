@@ -1,4 +1,4 @@
-from llama_supercharged.modes.single_model import single_model
+from supercharger.modes.single_model import single_model
 import yaml
 
 class MultiModel:

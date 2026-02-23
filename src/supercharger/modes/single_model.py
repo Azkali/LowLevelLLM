@@ -1,4 +1,4 @@
-from llama_supercharged.backends import *
+from supercharger.backends import *
 import inspect
 
 def single_model(model: str, json_file: str, messages: list = []):

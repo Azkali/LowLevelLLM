@@ -1,4 +1,4 @@
-from llama_supercharged.llm import LLM
+from supercharger.llm import LLM
 from typing import override
 
 # L1JSON/redJSON -> llamaLLM inflation:
