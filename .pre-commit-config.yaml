@@ -10,37 +10,26 @@ repos:
             exit 0
           fi
 
-          if [[ $(uname -s) = "Linux" ]]; then
-            amd=false;
-            for d in /sys/bus/pci/devices/*; do
-              if [[ "$(cat $d/vendor 2>/dev/null)" = "0x1002" ]]; then
-                class=$(cat $d/class 2>/dev/null)
-                case "$class" in
-                  0x0300*|0x0302*)
-                    echo "AMD GPU detected — running ROCm container"
-                    amd=true;
-                    break
-                  ;;
-                esac
+          case $(uname -s) in
+            "Linux")
+              if grep -rlq "0x1002" /sys/bus/pci/devices/*/vendor 2>/dev/null; then
+                echo "AMD GPU detected — running ROCm container"
+                docker build -f Dockerfile.rocm -t supercharger/rocm .
+                docker run --rm --privileged supercharger/rocm --json /app/examples/prompts/text_xform.json --model xformLLM
+              else
+                echo "Running Vulkan container"
+                make vulkan
               fi
-            done
-
-            if [[ $amd = "true" ]]; then
-              docker build -f Dockerfile.rocm -t uv-dev . && docker run --rm --privileged uv-dev
-            else
-              echo "Running Vulkan container"
-              make vulkan
-            fi
-
-          elif [[ $(uname -s) = "Darwin" ]]; then
-            echo "Running on macOS — running uv locally"
-            make metal
-            exit 0
-          else
-            echo "Running on CPU — running uv locally"
-            make cpu
-            exit 0
-          fi
+              ;;
+            "Darwin")
+              echo "Running on macOS — running uv locally"
+              make metal
+              ;;
+            *)
+              echo "Running on CPU — running uv locally"
+              make cpu
+              ;;
+          esac
           '
         language: system
         pass_filenames: false
