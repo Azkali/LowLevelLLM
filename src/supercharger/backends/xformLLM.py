@@ -47,10 +47,15 @@ class xformLLM(LLM):
         )
         thread.start()
 
+        logger.info("output ahead!")
+        logger.info("%TRLog%_wild_output_begin")
         output = []
         for token in self.streamer:
             output.append(token)
             print(token, end="", flush=True)
+        print()
+        logger.info("%TRLog%_wild_output_end")
+        logger.info("end of output.")
 
         return output
 
