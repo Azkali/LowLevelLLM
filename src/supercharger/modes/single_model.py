@@ -1,4 +1,4 @@
-from llama_supercharged.backends import *
+from supercharger.backends import *
 import inspect
 import logging
 

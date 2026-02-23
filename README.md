@@ -1,13 +1,15 @@
-# Llama Supercharged
+# Supercharger
 
-Llama supercharged is a Python library that provides a simple interface to the Llama model. It is designed to be easy to use and to provide a high level of performance.
+Supercharger is a Python library that provides a simple interface to the different LLM back ends. It is designed to be easy to use and to provide a high level of performance.
 
 # Building
 
 ```sh
-# macOS
-CMAKE_ARGS="-DGGML_METAL=ON -DGGML_RPC=ON" uv sync --extra cpu
+make [vulkan|cpu|metal]
+```
 
-# Linux with Vulkan
-CMAKE_ARGS="-DGGML_VULKAN=ON -DGGML_RPC=ON" uv sync --extra rocm
+For ROCm:
+```sh
+docker build -f Dockerfile.rocm -t supercharger/rocm .
+docker run -it --rm --privileged supercharger/rocm
 ```
